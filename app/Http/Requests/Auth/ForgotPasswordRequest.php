@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ForgotPasswordRequest extends FormRequest
@@ -24,7 +25,15 @@ class ForgotPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|exists:users,email'
+            'email' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $user = User::where('email', $value)->orWhere('username', $value)->first();
+                    if (!$user) {
+                        $fail('The value must be a valid email or username.');
+                    }
+                },
+            ],
         ];
     }
 }

@@ -24,8 +24,8 @@ class ResetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'token'     => 'required',
-            'blue_key' => 'required|min:8|confirmed',
+            'token'     => 'required|exists:password_resets,token',
+            'blue_key' => 'required|min:8',
         ];
     }
 }
