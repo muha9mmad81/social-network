@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,3 +25,13 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
 Route::post('/verify-code', [AuthController::class, 'verifyCode'])->name('verify-code');
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
+Route::get('/get-all-posts', [PostController::class, 'getAllPosts'])->name('get-all-posts');
+Route::get('/get-post/{id}', [PostController::class, 'getSinglePost'])->name('get-post');
+
+Route::middleware(['auth:api'])->group(function(){
+    Route::post('/create-post', [PostController::class, 'createPost'])->name('create-post');
+    Route::get('/get-my-posts', [PostController::class, 'getMyPosts'])->name('get-my-posts');
+    Route::post('/add-post-comment', [PostController::class, 'addPostComment'])->name('add-post-comment');
+    Route::post('/post-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToPosts'])->name('post-likes-and-dislikes');
+    Route::post('/comment-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToComments'])->name('comment-likes-and-dislikes');
+});
