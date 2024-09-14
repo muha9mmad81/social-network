@@ -18,9 +18,11 @@ class PostResource extends JsonResource
         return [
             'id'                    => $this->id ?? null,
             'title'                 => $this->title ?? null,
+            'type'                 => $this->type ?? null,
             'description'           => $this->description ?? null,
             'user'                  =>  $this->user ? new UserResource($this->user) : null,
             'images'                => $this->images ? PostImageResource::collection($this->images) : null,
+            'videos'                => $this->videos ? PostVideoResource::collection($this->videos) : null,
             'comments'              => $this->comments ? PostCommentResource::collection($this->comments) : null,
             'likes_count'           => $this->likes()->count(), 
             'dislikes_count'        => $this->dislikes()->count(),

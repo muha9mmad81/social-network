@@ -23,6 +23,11 @@ class Post extends Model
         return $this->hasMany(PostImage::class);
     }
 
+    public function videos()
+    {
+        return $this->hasMany(PostVideo::class);
+    }
+
     public function comments()
     {
         return $this->hasMany(PostComment::class)->where('parent', 0);
@@ -45,8 +50,10 @@ class Post extends Model
             $this->title = $request->title ?? $user->name . ' posted an update';
             $this->description = $request->description ?? null;
             $this->user_id = $user->id;
+            $this->type = $request->type ?? 'public';
             $this->save();
             $this->addPostImages($request, $this);
+            $this->addPostVideos($request, $this);
             return response()->json(['status' => 200, 'message' => 'Post has been created', 'data' => new PostResource($this)], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
@@ -67,12 +74,27 @@ class Post extends Model
         }
     }
 
+    public function addPostVideos($request, $post)
+    {
+        if ($request->video) {
+            foreach ($request->video as $key => $video) {
+                $fileName = $video->getClientOriginalName();
+                $file = saveFile($video, 'videos/posts', $fileName);
+                PostVideo::create([
+                    'post_id' => $post->id,
+                    'video' => $file['name']
+                ]);
+            }
+        }
+    }
+
     public function deletePost(Request $request, $postId)
     {
         try {
             $post = $this->find($postId);
             $post->delete();
             PostImage::where('post_id', $postId)->delete();
+            PostVideo::where('post_id', $postId)->delete();
             PostComment::where('post_id', $postId)->delete();
             PostLike::where('post_id', $postId)->delete();
 
