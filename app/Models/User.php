@@ -53,6 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function user_information()
+    {
+        return $this->hasOne(UserInformation::class);
+    }
+
     public function getUserByEmail($email)
     {
         return $this->where('email', $email)->first();
@@ -110,7 +115,7 @@ class User extends Authenticatable
         if (!$user) {
             return response()->json(['message' => 'User not found.', 'status' => 404], 404);
         }
-        
+
         $passwordReset = PasswordReset::updateOrCreate(
             [
                 'email'         => $request->email,
@@ -137,6 +142,94 @@ class User extends Authenticatable
             return response()->json(['data' => new UserResource($user), 'message' => 'Your Blue Key has been reset.', 'status' => 200], 200);
         } else {
             return response()->json(['data' => null, 'message' => 'Code is invalid.', 'status' => 401], 401);
+        }
+    }
+
+    public function editUserProfile(Request $request)
+    {
+        try {
+            $user = $this->getUserById(auth()->user()->id);
+
+            $user->name = $request->name ?? $user->name;
+            $user->update();
+
+            $userInfo = UserInformation::firstOrNew(['user_id' => $user->id]);
+
+            $userInfo->dob = $request->dob ?? $userInfo->dob;
+            $userInfo->dob_visibility = $request->dob_visibility ?? $userInfo->dob_visibility;
+            $userInfo->gender = $request->gender ?? $userInfo->gender;
+            $userInfo->gender_visibility = $request->gender_visibility ?? $userInfo->gender_visibility;
+            $userInfo->city = $request->city ?? $userInfo->city;
+            $userInfo->city_visibility = $request->city_visibility ?? $userInfo->city_visibility;
+            $userInfo->country = $request->country ?? $userInfo->country;
+            $userInfo->country_visibility = $request->country_visibility ?? $userInfo->country_visibility;
+            $userInfo->about = $request->about ?? $userInfo->about;
+            $userInfo->about_visibility = $request->about_visibility ?? $userInfo->about_visibility;
+            $userInfo->link1 = $request->link1 ?? $userInfo->link1;
+            $userInfo->link1_visibility = $request->link1_visibility ?? $userInfo->link1_visibility;
+            $userInfo->link2 = $request->link2 ?? $userInfo->link2;
+            $userInfo->link2_visibility = $request->link2_visibility ?? $userInfo->link2_visibility;
+
+            $userInfo->save();
+
+
+            return response()->json(['data' => new UserResource($user), 'message' => 'Profile updated successfully', 'status' => 200], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function updateProfilePhoto(Request $request)
+    {
+        try {
+            if ($request->profile_image) {
+                $user = $this->getUserById(auth()->user()->id);
+
+                $fileName = $request->profile_image->getClientOriginalName();
+                $file = saveFile($request->profile_image, 'images/users', $fileName);
+
+                UserInformation::updateOrCreate(
+                    [
+                        'user_id' => $user->id
+                    ],
+                    [
+                        'profile_image' => $file['name'],
+                    ]
+                );
+
+                return response()->json(['data' => new UserResource($user), 'message' => 'Profile Image updated successfully', 'status' => 200], 200);
+            }
+
+            return response()->json(['message' => 'Porfile Image is required.', 'status' => 500], 500);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function updateCoverPhoto(Request $request)
+    {
+        try {
+            if ($request->cover_image) {
+                $user = $this->getUserById(auth()->user()->id);
+
+                $fileName = $request->cover_image->getClientOriginalName();
+                $file = saveFile($request->cover_image, 'images/users', $fileName);
+
+                UserInformation::updateOrCreate(
+                    [
+                        'user_id' => $user->id
+                    ],
+                    [
+                        'cover_image' => $file['name'],
+                    ]
+                );
+
+                return response()->json(['data' => new UserResource($user), 'message' => 'Cover Image updated successfully', 'status' => 200], 200);
+            }
+
+            return response()->json(['message' => 'Cover Image is required.', 'status' => 500], 500);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
 }

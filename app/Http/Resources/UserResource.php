@@ -19,6 +19,7 @@ class UserResource extends JsonResource
             'name'          => $this->name ?? null,
             'email'         => $this->email ?? null,
             'username'    =>  $this->username ?? null,
+            'user_information'    =>  $this->user_information ? new UserInformationResource($this->user_information) : null,
             'created_at'    => $this->created_at ? $this->created_at->format('Y-m-d') : null,
         ];
     }

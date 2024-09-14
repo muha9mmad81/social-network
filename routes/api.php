@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,10 +29,14 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 Route::get('/get-all-posts', [PostController::class, 'getAllPosts'])->name('get-all-posts');
 Route::get('/get-post/{id}', [PostController::class, 'getSinglePost'])->name('get-post');
 
-Route::middleware(['auth:api'])->group(function(){
+Route::middleware(['auth:api'])->group(function () {
     Route::post('/create-post', [PostController::class, 'createPost'])->name('create-post');
     Route::get('/get-my-posts', [PostController::class, 'getMyPosts'])->name('get-my-posts');
     Route::post('/add-post-comment', [PostController::class, 'addPostComment'])->name('add-post-comment');
     Route::post('/post-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToPosts'])->name('post-likes-and-dislikes');
     Route::post('/comment-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToComments'])->name('comment-likes-and-dislikes');
+
+    Route::post('/edit-profile', [UserController::class, 'editUserProfile'])->name('edit-profile');
+    Route::post('/update-profile-photo', [UserController::class, 'updateProfilePhoto'])->name('update-profile-photo');
+    Route::post('/update-cover-photo', [UserController::class, 'updateCoverPhoto'])->name('update-cover-photo');
 });
