@@ -31,8 +31,11 @@ Route::get('/get-post/{id}', [PostController::class, 'getSinglePost'])->name('ge
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/create-post', [PostController::class, 'createPost'])->name('create-post');
+    Route::delete('/delete-post/{postId}', [PostController::class, 'deletePost'])->name('delete-post');
     Route::get('/get-my-posts', [PostController::class, 'getMyPosts'])->name('get-my-posts');
     Route::post('/add-post-comment', [PostController::class, 'addPostComment'])->name('add-post-comment');
+    Route::post('/edit-post-comment/{commentId}', [PostController::class, 'editPostComment'])->name('edit-post-comment');
+    Route::delete('/delete-post-comment/{commentId}', [PostController::class, 'deletePostComment'])->name('delete-post-comment');
     Route::post('/post-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToPosts'])->name('post-likes-and-dislikes');
     Route::post('/comment-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToComments'])->name('comment-likes-and-dislikes');
 

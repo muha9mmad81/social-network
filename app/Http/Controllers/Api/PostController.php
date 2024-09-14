@@ -23,6 +23,10 @@ class PostController extends Controller
         return $this->post->addPost($request);
     }
 
+    public function deletePost(Request $request, $postId) {
+        return $this->post->deletePost($request, $postId);
+    }
+
     public function getMyPosts(Request $request) {
         return $this->post->getAllMyPosts($request);
     }
@@ -33,6 +37,14 @@ class PostController extends Controller
 
     public function addPostComment(Request $request) {
         return $this->postComment->addPostComment($request);
+    }
+
+    public function editPostComment(Request $request, $commentId) {
+        return $this->postComment->editPostComment($request, $commentId);
+    }
+
+    public function deletePostComment(Request $request, $commentId) {
+        return $this->postComment->deletePostComment($request, $commentId);
     }
 
     public function addLikesAndDislikesToPosts(Request $request) {

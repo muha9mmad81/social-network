@@ -48,4 +48,31 @@ class PostComment extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function editPostComment(Request $request, $commentId)
+    {
+        try {
+            $comment = $this->find($commentId);
+            $comment->comment = $request->comment;
+            $comment->update();
+
+            return response()->json(['status' => 200, 'message' => 'Comment has been updated', 'data' => new PostCommentResource($comment)], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function deletePostComment(Request $request, $commentId)
+    {
+        try {
+            $comment = $this->find($commentId);
+            $comment->delete();
+            $this->where('parent', $commentId)->delete();
+            CommentLike::where('comment_id', $commentId)->delete();
+
+            return response()->json(['status' => 200, 'message' => 'Comment has been deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
 }

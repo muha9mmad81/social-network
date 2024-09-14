@@ -67,6 +67,21 @@ class Post extends Model
         }
     }
 
+    public function deletePost(Request $request, $postId)
+    {
+        try {
+            $post = $this->find($postId);
+            $post->delete();
+            PostImage::where('post_id', $postId)->delete();
+            PostComment::where('post_id', $postId)->delete();
+            PostLike::where('post_id', $postId)->delete();
+
+            return response()->json(['status' => 200, 'message' => 'Post has been deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
     public function getAllMyPosts(Request $request)
     {
         try {
