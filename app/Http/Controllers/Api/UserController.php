@@ -25,4 +25,8 @@ class UserController extends Controller
     public function updateCoverPhoto(Request $request){
         return $this->user->updateCoverPhoto($request);
     }
+
+    public function getAllUsers(Request $request) {
+        return $this->user->getAllUsers($request);
+    }
 }

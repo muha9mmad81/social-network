@@ -232,4 +232,18 @@ class User extends Authenticatable
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function getAllUsers(Request $request)
+    {
+        try {
+            $users = $this->where('id', '!=', auth()->user()->id)
+                ->orderByDesc('id')
+                ->get();
+            $collection = UserResource::collection($users);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
 }

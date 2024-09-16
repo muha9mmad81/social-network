@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -42,4 +43,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/edit-profile', [UserController::class, 'editUserProfile'])->name('edit-profile');
     Route::post('/update-profile-photo', [UserController::class, 'updateProfilePhoto'])->name('update-profile-photo');
     Route::post('/update-cover-photo', [UserController::class, 'updateCoverPhoto'])->name('update-cover-photo');
+    Route::get('/get-all-users', [UserController::class, 'getAllUsers'])->name('get-all-users');
+
+    Route::post('/chat', [ChatController::class, 'message'])->name('chat');
+    Route::get('/get-all-conversation', [ChatController::class, 'getAllConversation'])->name('get-all-conversation');
 });
