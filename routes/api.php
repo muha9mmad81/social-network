@@ -45,6 +45,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/update-cover-photo', [UserController::class, 'updateCoverPhoto'])->name('update-cover-photo');
     Route::get('/get-all-users', [UserController::class, 'getAllUsers'])->name('get-all-users');
 
+    Route::post('/send-friend-request', [UserController::class, 'sendFriendRequest'])->name('send-friend-request');
+    Route::post('/respond-friend-request', [UserController::class, 'respondToFriendRequest'])->name('respond-friend-request');
+    Route::get('/get-my-friends', [UserController::class, 'getMyFriendsList'])->name('get-my-friends');
+    Route::get('/get-my-friend-requests', [UserController::class, 'showFriendRequests'])->name('get-my-friend-requests');
+
     Route::post('/chat', [ChatController::class, 'message'])->name('chat');
     Route::get('/get-all-conversation', [ChatController::class, 'getAllConversation'])->name('get-all-conversation');
 });

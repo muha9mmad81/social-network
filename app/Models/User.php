@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
+use App\Http\Resources\FriendRequestResource;
 use App\Http\Resources\UserResource;
 use App\Notifications\ForgotPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,6 +59,23 @@ class User extends Authenticatable
         return $this->hasOne(UserInformation::class);
     }
 
+    public function friendRequestsSent()
+    {
+        return $this->hasMany(FriendRequest::class, 'sender_id');
+    }
+
+    // Friend Requests Received
+    public function friendRequestsReceived()
+    {
+        return $this->hasMany(FriendRequest::class, 'receiver_id');
+    }
+
+    // Friends List
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
+    }
+
     public function getUserByEmail($email)
     {
         return $this->where('email', $email)->first();
@@ -74,6 +92,12 @@ class User extends Authenticatable
             ->orWhere('username', $value)
             ->first();
     }
+
+    public function getPendingFriendRequests()
+    {
+        return $this->friendRequestsReceived()->where('status', 'pending')->get();
+    }
+
 
     public function addUser(Request $request)
     {
@@ -240,6 +264,18 @@ class User extends Authenticatable
                 ->orderByDesc('id')
                 ->get();
             $collection = UserResource::collection($users);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function showFriendRequests(Request $request)
+    {
+        try {
+            $pendingRequests = auth()->user()->getPendingFriendRequests();
+            $collection = FriendRequestResource::collection($pendingRequests);
 
             return response()->json(['status' => 200, 'data' => $collection], 200);
         } catch (\Exception $e) {
