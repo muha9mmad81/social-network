@@ -14,11 +14,13 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     protected $user;
-    public function __construct(User $user) {
+    public function __construct(User $user)
+    {
         $this->user = $user;
     }
 
-    public function register(RegisterUserRequest $request){
+    public function register(RegisterUserRequest $request)
+    {
         try {
             return $this->user->addUser($request);
         } catch (\Exception $e) {
@@ -26,7 +28,8 @@ class AuthController extends Controller
         }
     }
 
-    public function login(LoginUserRequest $request){
+    public function login(LoginUserRequest $request)
+    {
         try {
             return $this->user->loginUser($request);
         } catch (\Exception $e) {
@@ -34,7 +37,8 @@ class AuthController extends Controller
         }
     }
 
-    public function forgotPassword(ForgotPasswordRequest $request){
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
         try {
             return $this->user->forgotPassword($request);
         } catch (\Exception $e) {
@@ -42,7 +46,8 @@ class AuthController extends Controller
         }
     }
 
-    public function verifyCode(VerifyCodeRequest $request){
+    public function verifyCode(VerifyCodeRequest $request)
+    {
         try {
             return response()->json(['message' => 'Code has been verified.', 'status' => 200], 200);
         } catch (\Exception $e) {
@@ -50,9 +55,19 @@ class AuthController extends Controller
         }
     }
 
-    public function resetPassword(ResetPasswordRequest $request){
+    public function resetPassword(ResetPasswordRequest $request)
+    {
         try {
             return $this->user->resetPassword($request);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function activateYourAccount(Request $request)
+    {
+        try {
+            return $this->user->activateYourAccount($request);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }

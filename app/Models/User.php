@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Http\Resources\FriendRequestResource;
 use App\Http\Resources\UserResource;
 use App\Notifications\ForgotPasswordNotification;
+use App\Notifications\NewUserRegistration;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
@@ -101,12 +102,17 @@ class User extends Authenticatable
 
     public function addUser(Request $request)
     {
+        $randomToken = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+        $token = generateUniqueRememberToken($randomToken, User::class);
         $this->name = $request->name;
         $this->email = $request->email;
         $this->password = Hash::make($request->blue_key);
         $this->username = $request->username;
-        $this->email_verified_at = now();
+        $this->remember_token = $token;
+        // $this->email_verified_at = now();
         $this->save();
+
+        $this->notify(new NewUserRegistration($this, $token));
 
         return response()->json(['data' => new UserResource($this), 'message' => 'User registered successfully', 'status' => 200], 200);
     }
@@ -118,6 +124,10 @@ class User extends Authenticatable
         // dd($loginField, $user);
         if (!$user || !Hash::check($request->blue_key, $user->password)) {
             return response()->json(['data' => null, 'message' => 'Provided credentials is incorrect', 'status' => 401], 401);
+        }
+
+        if (!$user->email_verified_at) {
+            return response()->json(['data' => null, 'message' => 'Please verify your account', 'status' => 401], 401);
         }
 
         if (Auth::attempt([$loginField => $request->email, 'password' => $request->blue_key])) {
@@ -164,6 +174,20 @@ class User extends Authenticatable
             $passwordReset->delete();
 
             return response()->json(['data' => new UserResource($user), 'message' => 'Your Blue Key has been reset.', 'status' => 200], 200);
+        } else {
+            return response()->json(['data' => null, 'message' => 'Code is invalid.', 'status' => 401], 401);
+        }
+    }
+
+    public function activateYourAccount(Request $request)
+    {
+        $user = $this->where('remember_token', $request->token)->first();
+
+        if ($user) {
+            $user->email_verified_at = now();
+            $user->remember_token = null;
+            $user->update();
+            return response()->json(['data' => new UserResource($user), 'message' => 'Your account has been activated.', 'status' => 200], 200);
         } else {
             return response()->json(['data' => null, 'message' => 'Code is invalid.', 'status' => 401], 401);
         }
