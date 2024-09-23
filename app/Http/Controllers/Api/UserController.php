@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected $user, $friendRequest, $friend;
+    protected $user, $friendRequest, $friend, $group;
     function __construct(User $user, FriendRequest $friendRequest, Friend $friend)
     {
         $this->user = $user;

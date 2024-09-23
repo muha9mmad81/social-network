@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\GroupController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -30,6 +31,7 @@ Route::post('/activate-account', [AuthController::class, 'activateYourAccount'])
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
 Route::get('/get-all-posts', [PostController::class, 'getAllPosts'])->name('get-all-posts');
 Route::get('/get-post/{id}', [PostController::class, 'getSinglePost'])->name('get-post');
+Route::get('/get-all-groups', [GroupController::class, 'getAllGroups'])->name('get-all-groups');
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/create-post', [PostController::class, 'createPost'])->name('create-post');
@@ -53,4 +55,9 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('/chat', [ChatController::class, 'message'])->name('chat');
     Route::get('/get-all-conversation', [ChatController::class, 'getAllConversation'])->name('get-all-conversation');
+
+    Route::post('/create-group', [GroupController::class, 'createGroup'])->name('create-group');
+    Route::post('/join-group', [GroupController::class, 'joinGroup'])->name('join-group');
+    Route::post('/leave-group', [GroupController::class, 'leaveGroup'])->name('leave-group');
+    Route::get('/get-my-groups', [GroupController::class, 'getMyGroups'])->name('get-my-groups');
 });
