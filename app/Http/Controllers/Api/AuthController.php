@@ -37,6 +37,24 @@ class AuthController extends Controller
         }
     }
 
+    public function logoutUser(Request $request)
+    {
+        try {
+            return $this->user->logoutUser($request);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function getUserOnlineStatus(Request $request, $userId)
+    {
+        try {
+            return $this->user->getUserOnlineStatus($userId);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
     public function forgotPassword(ForgotPasswordRequest $request)
     {
         try {

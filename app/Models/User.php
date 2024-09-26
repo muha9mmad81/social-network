@@ -134,11 +134,42 @@ class User extends Authenticatable
             $checkLastAttemptedUser = Auth::getLastAttempted();
             Auth::login($checkLastAttemptedUser);
             $token = Auth::user()->createToken('LaravelAuthApp')->accessToken;
-            return response()->json(['token' => $token, 'data' => new UserResource(Auth::user()), 'message' => 'User logged in successfully', 'status' => 200], 200);
+
+            $user->is_online = true;
+            $user->last_seen = null;
+            $user->update();
+
+            return response()->json(['token' => $token, 'data' => new UserResource($user), 'message' => 'User logged in successfully', 'status' => 200], 200);
         }
 
         return response()->json(['data' => null, 'message' => 'Invalid details', 'status' => 401], 401);
     }
+
+    public function logoutUser()
+    {
+        $user = Auth::user();
+
+        $user->is_online = false;
+        $user->last_seen = now();
+        $user->update();
+
+        Auth::user()->token()->revoke();
+
+        return response()->json(['message' => 'User logged out successfully', 'status' => 200], 200);
+    }
+
+    public function getUserOnlineStatus($id)
+    {
+        $user = $this->find($id);
+
+        if ($user->is_online) {
+            return response()->json(['status' => 'online', 'last_seen' => null, 'message' => 'User is currently online', 'status_code' => 200], 200);
+        } else {
+            $offlineDuration = $user->last_seen ? now()->diffForHumans($user->last_seen, true) : null;
+            return response()->json(['status' => 'offline', 'last_seen' => $user->last_seen, 'offline_duration' => $offlineDuration, 'message' => 'User is offline', 'status_code' => 200], 200);
+        }
+    }
+
 
     public function forgotPassword(Request $request)
     {

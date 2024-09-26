@@ -32,8 +32,11 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('
 Route::get('/get-all-posts', [PostController::class, 'getAllPosts'])->name('get-all-posts');
 Route::get('/get-post/{id}', [PostController::class, 'getSinglePost'])->name('get-post');
 Route::get('/get-all-groups', [GroupController::class, 'getAllGroups'])->name('get-all-groups');
+Route::get('/user-online-status/{userId}', [AuthController::class, 'getUserOnlineStatus'])->name('user-online-status');
 
 Route::middleware(['auth:api'])->group(function () {
+    Route::post('/logout-user', [AuthController::class, 'logoutUser'])->name('logout-user');
+
     Route::post('/create-post', [PostController::class, 'createPost'])->name('create-post');
     Route::delete('/delete-post/{postId}', [PostController::class, 'deletePost'])->name('delete-post');
     Route::get('/get-my-posts', [PostController::class, 'getMyPosts'])->name('get-my-posts');
