@@ -33,6 +33,7 @@ Route::get('/get-all-posts', [PostController::class, 'getAllPosts'])->name('get-
 Route::get('/get-post/{id}', [PostController::class, 'getSinglePost'])->name('get-post');
 Route::get('/get-all-groups', [GroupController::class, 'getAllGroups'])->name('get-all-groups');
 Route::get('/user-online-status/{userId}', [AuthController::class, 'getUserOnlineStatus'])->name('user-online-status');
+Route::get('/get-user-detail/{userId}', [UserController::class, 'getUserDetail'])->name('get-user-detail');
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout-user', [AuthController::class, 'logoutUser'])->name('logout-user');

@@ -337,4 +337,16 @@ class User extends Authenticatable
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function getUserDetail(Request $request, $userId)
+    {
+        try {
+            $user = $this->find($userId);
+            $user = new UserResource($user);
+
+            return response()->json(['status' => 200, 'data' => $user], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
 }

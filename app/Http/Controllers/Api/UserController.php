@@ -57,4 +57,9 @@ class UserController extends Controller
     {
         return $this->friend->getMyFriendsList($request);
     }
+
+    public function getUserDetail(Request $request, $userId)
+    {
+        return $this->user->getUserDetail($request, $userId);
+    }
 }
