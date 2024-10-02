@@ -58,4 +58,12 @@ class PostController extends Controller
     public function getSinglePost(Request $request, $id) {
         return $this->post->getPostById($request, $id);
     }
+
+    public function getUserMedia(Request $request, $userId)
+    {
+        return $this->post->getUserMedia($request, $userId);
+    }
 }
+
+
+

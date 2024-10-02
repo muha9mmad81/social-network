@@ -61,4 +61,33 @@ class Message extends Model
         $data = MessageResource::collection($conversations);
         return response()->json(['data' => $data, 'status' => 200], 200);
     }
+
+
+    public function getAllConversationsListWithLastMessage($userId)
+    {
+        // Get all conversations for the user
+        $conversations = Conversation::where(function ($query) use ($userId) {
+            $query->where('from_id', $userId)
+                ->orWhere('to_id', $userId);
+        })
+            ->with('message') // Eager load messages to avoid N+1 issue
+            ->get()
+            ->map(function ($conversation) use ($userId) {
+                $lastMessage = $conversation->message()->latest()->first();
+                return [
+                    'conversation_id' => $conversation->id,
+                    'user' => $conversation->from_id === $userId ? $conversation->reciever : $conversation->sender,
+                    'last_message' => $lastMessage ? $lastMessage->message : null,
+                    'last_message_time' => $lastMessage ? $lastMessage->created_at : null,
+                    'user_id' => $conversation->from_id === $userId ? $conversation->to_id : $conversation->from_id // Get the corresponding user ID
+                ];
+            })
+            ->groupBy('user_id') // Group by the user ID to get unique users
+            ->map(function ($group) {
+                return collect($group)->sortByDesc('last_message_time')->first(); // Get the latest message for each user
+            })
+            ->values(); // Reset keys to have a clean array
+
+        return $conversations;
+    }
 }

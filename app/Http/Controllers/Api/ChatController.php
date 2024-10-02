@@ -11,25 +11,38 @@ class ChatController extends Controller
 {
     protected $conversation, $message;
 
-    public function __construct(Conversation $conversation, Message $message) {
+    public function __construct(Conversation $conversation, Message $message)
+    {
         $this->conversation = $conversation;
         $this->message = $message;
     }
 
-    public function message(Request $request){
+    public function message(Request $request)
+    {
         try {
             $conversation = $this->conversation->createConversation($request);
-            return $this->message->sendMessageToUser($request, $conversation);            
+            return $this->message->sendMessageToUser($request, $conversation);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occured '. $e->getMessage(), 'status' => 400], 400);
+            return response()->json(['message' => 'An error occured ' . $e->getMessage(), 'status' => 400], 400);
         }
     }
 
-    public function getAllConversation(Request $request){
+    public function getAllConversation(Request $request)
+    {
         try {
-            return $this->message->getAllConversation(auth()->user()->id, $request->reciever_id);            
+            return $this->message->getAllConversation(auth()->user()->id, $request->reciever_id);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'An error occured '. $e->getMessage(), 'status' => 400], 400);
+            return response()->json(['message' => 'An error occured ' . $e->getMessage(), 'status' => 400], 400);
+        }
+    }
+
+    public function getAllConversationsListWithLastMessage(Request $request)
+    {
+        try {
+            $userId = auth()->user()->id;
+            return $this->message->getAllConversationsListWithLastMessage($userId);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred: ' . $e->getMessage(), 'status' => 400], 400);
         }
     }
 }

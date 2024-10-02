@@ -46,6 +46,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::delete('/delete-post-comment/{commentId}', [PostController::class, 'deletePostComment'])->name('delete-post-comment');
     Route::post('/post-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToPosts'])->name('post-likes-and-dislikes');
     Route::post('/comment-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToComments'])->name('comment-likes-and-dislikes');
+    Route::get('/user/{id}/media', [PostController::class, 'getUserMedia'])->name('get-user-media');
 
     Route::post('/edit-profile', [UserController::class, 'editUserProfile'])->name('edit-profile');
     Route::post('/update-profile-photo', [UserController::class, 'updateProfilePhoto'])->name('update-profile-photo');
@@ -59,6 +60,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::post('/chat', [ChatController::class, 'message'])->name('chat');
     Route::get('/get-all-conversation', [ChatController::class, 'getAllConversation'])->name('get-all-conversation');
+    Route::get('/get-user-converstaions-list', [ChatController::class, 'getAllConversationsListWithLastMessage'])->name('get-user-converstaions-list');
 
     Route::post('/create-group', [GroupController::class, 'createGroup'])->name('create-group');
     Route::post('/join-group', [GroupController::class, 'joinGroup'])->name('join-group');

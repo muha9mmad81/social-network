@@ -140,4 +140,34 @@ class Post extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function getUserMedia(Request $request, $userId)
+    {
+        try {
+            $user = User::with(['post.images', 'post.videos'])->find($userId);
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+            $posts = $user->post()->with(['images', 'videos'])->get();
+            $type = $request->query('type', 'both');
+            $media = [];
+
+            if ($type === 'images' || $type === 'both') {
+                $images = $posts->pluck('images')->flatten()->map(function ($image) {
+                    return asset('images/posts/' . $image->image);  
+                });
+                $media['images'] = $images;
+            }
+
+            if ($type === 'videos' || $type === 'both') {
+                $videos = $posts->pluck('videos')->flatten()->map(function ($video) {
+                    return asset('images/posts/' . $video->video); 
+                });
+                $media['videos'] = $videos;
+            }
+            return response()->json($media);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 500], 500);
+        }
+    }
 }
