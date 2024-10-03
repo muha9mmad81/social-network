@@ -47,6 +47,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/post-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToPosts'])->name('post-likes-and-dislikes');
     Route::post('/comment-likes-and-dislikes', [PostController::class, 'addLikesAndDislikesToComments'])->name('comment-likes-and-dislikes');
     Route::get('/user/{id}/media', [PostController::class, 'getUserMedia'])->name('get-user-media');
+    Route::post('/create-remove-post-favourite', [PostController::class, 'createOrRemovePostFavourite'])->name('create-remove-post-favourite');
+    Route::get('/get-my-favourite-post', [PostController::class, 'getMyFavouritePosts'])->name('get-my-favourite-post');
 
     Route::post('/edit-profile', [UserController::class, 'editUserProfile'])->name('edit-profile');
     Route::post('/update-profile-photo', [UserController::class, 'updateProfilePhoto'])->name('update-profile-photo');
