@@ -20,8 +20,9 @@ class UserResource extends JsonResource
             'email'         => $this->email ?? null,
             'username'    =>  $this->username ?? null,
             'user_information'    =>  $this->user_information ? new UserInformationResource($this->user_information) : null,
+            'user_email_preference'    =>  $this->user_email_preference ? new EmailPreferenceResource($this->user_email_preference) : null,
             'is_online'       => $this->is_online ?? false,
-            'last_seen'       => $this->last_seen ? $this->last_seen->diffForHumans() : null, 
+            'last_seen'       => $this->last_seen ? $this->last_seen->diffForHumans() : null,
             'created_at'    => $this->created_at ? $this->created_at->format('Y-m-d') : null,
         ];
     }

@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->hasOne(UserInformation::class);
     }
 
+    public function user_email_preference()
+    {
+        return $this->hasOne(UserEmailNotificationPreferences::class);
+    }
+
     public function friendRequestsSent()
     {
         return $this->hasMany(FriendRequest::class, 'sender_id');
@@ -234,25 +239,55 @@ class User extends Authenticatable
 
             $userInfo = UserInformation::firstOrNew(['user_id' => $user->id]);
 
+            $userInfo->profile_visibiltiy = $request->profile_visibiltiy ?? $userInfo->profile_visibiltiy ?? "public";
             $userInfo->dob = $request->dob ?? $userInfo->dob;
-            $userInfo->dob_visibility = $request->dob_visibility ?? $userInfo->dob_visibility;
+            $userInfo->dob_visibility = $request->dob_visibility ?? $userInfo->dob_visibility ?? "everyone";
             $userInfo->gender = $request->gender ?? $userInfo->gender;
-            $userInfo->gender_visibility = $request->gender_visibility ?? $userInfo->gender_visibility;
+            $userInfo->gender_visibility = $request->gender_visibility ?? $userInfo->gender_visibility ?? "everyone";
             $userInfo->city = $request->city ?? $userInfo->city;
-            $userInfo->city_visibility = $request->city_visibility ?? $userInfo->city_visibility;
+            $userInfo->city_visibility = $request->city_visibility ?? $userInfo->city_visibility ?? "everyone";
             $userInfo->country = $request->country ?? $userInfo->country;
-            $userInfo->country_visibility = $request->country_visibility ?? $userInfo->country_visibility;
+            $userInfo->country_visibility = $request->country_visibility ?? $userInfo->country_visibility ?? "everyone";
             $userInfo->about = $request->about ?? $userInfo->about;
-            $userInfo->about_visibility = $request->about_visibility ?? $userInfo->about_visibility;
+            $userInfo->about_visibility = $request->about_visibility ?? $userInfo->about_visibility ?? "everyone";
             $userInfo->link1 = $request->link1 ?? $userInfo->link1;
-            $userInfo->link1_visibility = $request->link1_visibility ?? $userInfo->link1_visibility;
+            $userInfo->link1_visibility = $request->link1_visibility ?? $userInfo->link1_visibility ?? "everyone";
             $userInfo->link2 = $request->link2 ?? $userInfo->link2;
-            $userInfo->link2_visibility = $request->link2_visibility ?? $userInfo->link2_visibility;
+            $userInfo->link2_visibility = $request->link2_visibility ?? $userInfo->link2_visibility ?? "everyone";
+            $userInfo->group_invite = $request->group_invite ?? $userInfo->group_invite ?? "everyone";
 
             $userInfo->save();
 
 
             return response()->json(['data' => new UserResource($user), 'message' => 'Profile updated successfully', 'status' => 200], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function editUserEmailPreference(Request $request)
+    {
+        try {
+            $user = $this->getUserById(auth()->user()->id);
+
+            $userInfo = UserEmailNotificationPreferences::firstOrNew(['user_id' => $user->id]);
+
+            $userInfo->activity_mention = $request->activity_mention ?? $userInfo->activity_mention ?? "Yes";
+            $userInfo->activity_replies = $request->activity_replies ?? $userInfo->activity_replies ?? "Yes";
+            $userInfo->message = $request->message ?? $userInfo->message ?? "Yes";
+            $userInfo->membership_invitation = $request->membership_invitation ?? $userInfo->membership_invitation ?? "Yes";
+            $userInfo->send_friend_request = $request->send_friend_request ?? $userInfo->send_friend_request ?? "Yes";
+            $userInfo->accept_friend_request = $request->accept_friend_request ?? $userInfo->accept_friend_request ?? "Yes";
+            $userInfo->group_invitation = $request->group_invitation ?? $userInfo->group_invitation ?? "Yes";
+            $userInfo->group_info_update = $request->group_info_update ?? $userInfo->group_info_update ?? "Yes";
+            $userInfo->group_administrator_mod = $request->group_administrator_mod ?? $userInfo->group_administrator_mod ?? "Yes";
+            $userInfo->join_private_group = $request->join_private_group ?? $userInfo->join_private_group ?? "Yes";
+            $userInfo->group_request = $request->group_request ?? $userInfo->group_request ?? "Yes";
+
+            $userInfo->save();
+
+
+            return response()->json(['data' => new UserResource($user), 'message' => 'Email preferences updated successfully', 'status' => 200], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
@@ -345,6 +380,19 @@ class User extends Authenticatable
             $user = new UserResource($user);
 
             return response()->json(['status' => 200, 'data' => $user], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function updatePassword(Request $request)
+    {
+        try {
+            $user = $this->find(auth()->user()->id);
+            $user->password = Hash::make($request->blue_key);
+            $user->update();
+
+            return response()->json(['status' => 200, 'message' => 'Blue key updated successfully.'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }

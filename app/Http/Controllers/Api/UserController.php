@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUserPasswordRequest;
 use App\Models\Friend;
 use App\Models\FriendRequest;
 use App\Models\User;
@@ -21,6 +22,11 @@ class UserController extends Controller
     public function editUserProfile(Request $request)
     {
         return $this->user->editUserProfile($request);
+    }
+
+    public function editUserEmailPreference(Request $request)
+    {
+        return $this->user->editUserEmailPreference($request);
     }
 
     public function updateProfilePhoto(Request $request)
@@ -61,5 +67,10 @@ class UserController extends Controller
     public function getUserDetail(Request $request, $userId)
     {
         return $this->user->getUserDetail($request, $userId);
+    }
+
+    public function updatePassword(UpdateUserPasswordRequest $request)
+    {
+        return $this->user->updatePassword($request);
     }
 }

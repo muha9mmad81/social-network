@@ -51,9 +51,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/get-my-favourite-post', [PostController::class, 'getMyFavouritePosts'])->name('get-my-favourite-post');
 
     Route::post('/edit-profile', [UserController::class, 'editUserProfile'])->name('edit-profile');
+    Route::post('/edit-email-preference', [UserController::class, 'editUserEmailPreference'])->name('edit-email-preference');
     Route::post('/update-profile-photo', [UserController::class, 'updateProfilePhoto'])->name('update-profile-photo');
     Route::post('/update-cover-photo', [UserController::class, 'updateCoverPhoto'])->name('update-cover-photo');
     Route::get('/get-all-users', [UserController::class, 'getAllUsers'])->name('get-all-users');
+    Route::post('/update-password', [UserController::class, 'updatePassword'])->name('update-password');
 
     Route::post('/send-friend-request', [UserController::class, 'sendFriendRequest'])->name('send-friend-request');
     Route::post('/respond-friend-request', [UserController::class, 'respondToFriendRequest'])->name('respond-friend-request');

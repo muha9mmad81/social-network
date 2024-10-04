@@ -11,6 +11,7 @@ class UserInformation extends Model
 
     protected $fillable = [
         'user_id',
+        'profile_visibiltiy',
         'dob',
         'dob_visibility',
         'gender',
@@ -23,6 +24,7 @@ class UserInformation extends Model
         'cover_image',
         'about',
         'about_visibility',
+        'group_invite',
         'link1',
         'link1_visibility',
         'link2',

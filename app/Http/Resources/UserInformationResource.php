@@ -16,6 +16,7 @@ class UserInformationResource extends JsonResource
     {
         return [
             'id'                    => $this->id ?? null,
+            'profile_visibiltiy'                 => $this->profile_visibiltiy ?? null,
             'dob'                 => $this->dob ?? null,
             'dob_visibility'           => $this->dob_visibility ?? null,
             'gender'           => $this->gender ?? null,
@@ -26,6 +27,7 @@ class UserInformationResource extends JsonResource
             'country_visibility'           => $this->country_visibility ?? null,
             'about'           => $this->about ?? null,
             'about_visibility'           => $this->about_visibility ?? null,
+            'group_invite'           => $this->group_invite ?? null,
             'link1'           => $this->link1 ?? null,
             'link1_visibility'           => $this->link1_visibility ?? null,
             'link2'           => $this->link2 ?? null,
