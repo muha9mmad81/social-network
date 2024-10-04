@@ -57,6 +57,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/get-all-users', [UserController::class, 'getAllUsers'])->name('get-all-users');
     Route::post('/update-password', [UserController::class, 'updatePassword'])->name('update-password');
 
+    Route::post('/send-invitation', [UserController::class, 'sendInvitation'])->name('send-invitation');
+    Route::post('/update-invitation-status', [UserController::class, 'updateInvitationStatus'])->name('update-invitation-status');
+    Route::get('/get-my-invitations', [UserController::class, 'getMyInvitations'])->name('get-my-invitations');
+
     Route::post('/send-friend-request', [UserController::class, 'sendFriendRequest'])->name('send-friend-request');
     Route::post('/respond-friend-request', [UserController::class, 'respondToFriendRequest'])->name('respond-friend-request');
     Route::get('/get-my-friends', [UserController::class, 'getMyFriendsList'])->name('get-my-friends');

@@ -3,20 +3,23 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InvitationSendRequest;
 use App\Http\Requests\UpdateUserPasswordRequest;
 use App\Models\Friend;
 use App\Models\FriendRequest;
+use App\Models\Invitation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected $user, $friendRequest, $friend, $group;
-    function __construct(User $user, FriendRequest $friendRequest, Friend $friend)
+    protected $user, $friendRequest, $friend, $group, $invitation;
+    function __construct(User $user, FriendRequest $friendRequest, Friend $friend, Invitation $invitation)
     {
         $this->user = $user;
         $this->friendRequest = $friendRequest;
         $this->friend = $friend;
+        $this->invitation = $invitation;
     }
 
     public function editUserProfile(Request $request)
@@ -72,5 +75,20 @@ class UserController extends Controller
     public function updatePassword(UpdateUserPasswordRequest $request)
     {
         return $this->user->updatePassword($request);
+    }
+
+    public function sendInvitation(InvitationSendRequest $request)
+    {
+        return $this->invitation->sendInvitation($request);
+    }
+
+    public function updateInvitationStatus(Request $request)
+    {
+        return $this->invitation->updateInvitationStatus($request);
+    }
+
+    public function getMyInvitations(Request $request)
+    {
+        return $this->invitation->getMyInvitations($request);
     }
 }
