@@ -11,11 +11,16 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'user_id', 'title', 'description', 'type'];
+    protected $fillable = ['id', 'user_id', 'title', 'description', 'type', 'group_id'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 
     public function images()
@@ -50,6 +55,7 @@ class Post extends Model
             $this->title = $request->title ?? $user->name . ' posted an update';
             $this->description = $request->description ?? null;
             $this->user_id = $user->id;
+            $this->group_id = $request->group_id;
             $this->type = $request->type ?? 'public';
             $this->save();
             $this->addPostImages($request, $this);
@@ -108,7 +114,7 @@ class Post extends Model
     {
         try {
             $user = auth()->user();
-            $posts = $this->where('user_id', $user->id)->orderByDesc('id')->get();
+            $posts = $this->where('user_id', $user->id)->where('group_id', null)->orderByDesc('id')->get();
             $collection = PostResource::collection($posts);
 
             return response()->json(['status' => 200, 'data' => $collection], 200);
@@ -120,7 +126,7 @@ class Post extends Model
     public function getAllPosts(Request $request)
     {
         try {
-            $posts = $this->orderByDesc('id')->get();
+            $posts = $this->where('group_id', null)->orderByDesc('id')->get();
             $collection = PostResource::collection($posts);
 
             return response()->json(['status' => 200, 'data' => $collection], 200);
@@ -128,6 +134,45 @@ class Post extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function getAllMyGroupPosts(Request $request)
+    {
+        try {
+            $user = auth()->user();
+            $posts = $this->where('user_id', $user->id)->where('group_id', '!=', null)->orderByDesc('id')->get();
+            $collection = PostResource::collection($posts);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function getAllGroupPosts(Request $request)
+    {
+        try {
+            $posts = $this->where('group_id', '!=', null)->orderByDesc('id')->get();
+            $collection = PostResource::collection($posts);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function getPostAccordingToGroup(Request $request)
+    {
+        try {
+            $posts = $this->where('group_id', $request->group_id)->orderByDesc('id')->first();
+            $collection = new PostResource($posts);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    
 
     public function getPostById(Request $request, $postId)
     {

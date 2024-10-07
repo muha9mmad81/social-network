@@ -34,6 +34,8 @@ Route::get('/get-post/{id}', [PostController::class, 'getSinglePost'])->name('ge
 Route::get('/get-all-groups', [GroupController::class, 'getAllGroups'])->name('get-all-groups');
 Route::get('/user-online-status/{userId}', [AuthController::class, 'getUserOnlineStatus'])->name('user-online-status');
 Route::get('/get-user-detail/{userId}', [UserController::class, 'getUserDetail'])->name('get-user-detail');
+Route::get('/get-group-posts', [PostController::class, 'getAllGroupPosts'])->name('get-group-posts');
+Route::get('/get-posts-according-to-group', [PostController::class, 'getPostAccordingToGroup'])->name('get-posts-according-to-group');
 
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout-user', [AuthController::class, 'logoutUser'])->name('logout-user');
@@ -49,6 +51,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('/user/{id}/media', [PostController::class, 'getUserMedia'])->name('get-user-media');
     Route::post('/create-remove-post-favourite', [PostController::class, 'createOrRemovePostFavourite'])->name('create-remove-post-favourite');
     Route::get('/get-my-favourite-post', [PostController::class, 'getMyFavouritePosts'])->name('get-my-favourite-post');
+    Route::get('/get-my-group-posts', [PostController::class, 'getAllMyGroupPosts'])->name('get-my-group-posts');
 
     Route::post('/edit-profile', [UserController::class, 'editUserProfile'])->name('edit-profile');
     Route::post('/edit-email-preference', [UserController::class, 'editUserEmailPreference'])->name('edit-email-preference');

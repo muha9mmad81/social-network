@@ -21,6 +21,7 @@ class PostResource extends JsonResource
             'type'                 => $this->type ?? null,
             'description'           => $this->description ?? null,
             'user'                  =>  $this->user ? new UserResource($this->user) : null,
+            'group'                  =>  $this->group ? new GroupResource($this->group) : null,
             'images'                => $this->images ? PostImageResource::collection($this->images) : null,
             'videos'                => $this->videos ? PostVideoResource::collection($this->videos) : null,
             'comments'              => $this->comments ? PostCommentResource::collection($this->comments) : null,

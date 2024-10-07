@@ -43,6 +43,21 @@ class PostController extends Controller
         return $this->post->getAllPosts($request);
     }
 
+    public function getAllMyGroupPosts(Request $request)
+    {
+        return $this->post->getAllMyGroupPosts($request);
+    }
+
+    public function getAllGroupPosts(Request $request)
+    {
+        return $this->post->getAllGroupPosts($request);
+    }
+
+    public function getPostAccordingToGroup(Request $request)
+    {
+        return $this->post->getPostAccordingToGroup($request);
+    }
+
     public function addPostComment(Request $request)
     {
         return $this->postComment->addPostComment($request);
