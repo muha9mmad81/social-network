@@ -74,12 +74,12 @@ class Message extends Model
             ->get()
             ->map(function ($conversation) use ($userId) {
                 // Identify the other participant in the conversation
-                $otherUserId = $conversation->from_id === $userId ? $conversation->to_id : $conversation->from_id;
+                $otherUserId = $conversation->from_id == $userId ? $conversation->to_id : $conversation->from_id;
                 $lastMessage = $conversation->message()->latest()->first();
 
                 return [
                     'conversation_id' => $conversation->id,
-                    'user' => $conversation->from_id === $userId ? $conversation->reciever : $conversation->sender,
+                    'user' => $conversation->from_id == $userId ? $conversation->reciever : $conversation->sender,
                     'last_message' => $lastMessage ? $lastMessage->message : null,
                     'last_message_time' => $lastMessage ? $lastMessage->created_at : null,
                     'other_user_id' => $otherUserId // Correctly get the other participant's ID
