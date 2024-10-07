@@ -14,16 +14,11 @@ class Invitation extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['user_id', 'reciever_id', 'status', 'token'];
+    protected $fillable = ['user_id', 'email', 'status', 'token'];
 
     public function sender()
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function reciever()
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function sendInvitation(Request $request)
@@ -33,16 +28,15 @@ class Invitation extends Model
             $token = generateUniqueCode($randomToken, Invitation::class);
 
             $userId = auth()->user()->id;
-            $reciever = User::where('email', $request->email)->first();
 
             $this->user_id = $userId;
-            $this->reciever_id = $reciever->id;
+            $this->email = $request->email;
             $this->status = 'Pending';
             $this->token = $token;
             $this->save();
 
-            Notification::route('mail', $reciever->email)
-                ->notify(new InvitationNotification($this, $reciever, auth()->user()));
+            Notification::route('mail', $request->email)
+                ->notify(new InvitationNotification($this, $request->email, auth()->user()));
 
             // $this->notify(new InvitationNotification($this, $reciever, auth()->user()));
 

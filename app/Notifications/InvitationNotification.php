@@ -16,11 +16,11 @@ class InvitationNotification extends Notification
      *
      * @return void
      */
-    protected $invitation, $reciever, $user;
-    public function __construct($invitation, $reciever, $user)
+    protected $invitation, $email, $user;
+    public function __construct($invitation, $email, $user)
     {
         $this->invitation = $invitation;
-        $this->reciever = $reciever;
+        $this->email = $email;
         $this->user = $user;
     }
 
@@ -46,7 +46,7 @@ class InvitationNotification extends Notification
         return (new MailMessage)
             ->from($this->user->email)
             ->subject('Invitation Request.')
-            ->markdown('email.invitation', ['invitation' => $this->invitation, 'reciever' => $this->reciever, 'user' => $this->user]);
+            ->markdown('email.invitation', ['invitation' => $this->invitation, 'email' => $this->email, 'user' => $this->user]);
     }
 
     /**

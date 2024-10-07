@@ -17,8 +17,8 @@ class InvitationResource extends JsonResource
         return [
             'id'            => $this->id ?? null,
             'status'          => $this->status ?? null,
-            'sender'    =>  $this->sender ? new UserResource($this->sender) : null,
-            'reciever'    =>  $this->reciever ? new UserResource($this->reciever) : null,
+            'email'          => $this->email ?? null,
+            'user'    =>  $this->sender ? new UserResource($this->sender) : null,
             'created_at'    => $this->created_at ? $this->created_at->format('Y-m-d') : null,
         ];
     }

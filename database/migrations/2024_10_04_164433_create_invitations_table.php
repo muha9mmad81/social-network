@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('reciever_id');
+            $table->string('email');
             $table->string('token');
             $table->enum('status', ['Pending', 'Rejected', 'Accepted'])->default('Pending');
             $table->timestamps();
