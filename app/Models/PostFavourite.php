@@ -59,4 +59,18 @@ class PostFavourite extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 500], 500);
         }
     }
+
+    public function getUserFavouritePosts(Request $request, $userId)
+    {
+        try {
+            $favourites = $this->where('user_id', $userId)->get();
+            $collection = PostFavouriteResource::collection($favourites);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+
+            return response()->json(['status' => 200, 'message' => 'Post added to favourites'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 500], 500);
+        }
+    }
 }

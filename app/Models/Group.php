@@ -109,4 +109,17 @@ class Group extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function getUserGroupDetails(Request $request, $userId)
+    {
+        try {
+            $groupIds = GroupMember::where('user_id', $userId)->distinct()->pluck('group_id');
+            $groups = $this->whereIn('id', $groupIds)->orderByDesc('id')->get();
+            $collection = GroupResource::collection($groups);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
 }

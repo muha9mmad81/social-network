@@ -19,4 +19,14 @@ class Friend extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function getUserFriendsList(Request $request, $userId)
+    {
+        try {
+            $user = User::find($userId);
+            return response()->json(['status' => 200, 'data' => UserResource::collection($user->friends)], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
 }

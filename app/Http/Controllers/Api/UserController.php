@@ -91,4 +91,9 @@ class UserController extends Controller
     {
         return $this->invitation->getMyInvitations($request);
     }
+
+    public function getUserFriendsList(Request $request, $userId)
+    {
+        return $this->friend->getUserFriendsList($request, $userId);
+    }
 }

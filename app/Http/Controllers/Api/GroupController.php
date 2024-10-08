@@ -39,4 +39,9 @@ class GroupController extends Controller
     {
         return $this->group->getMyGroupDetails($request);
     }
+
+    public function getUserGroups(Request $request, $userId)
+    {
+        return $this->group->getUserGroupDetails($request, $userId);
+    }
 }

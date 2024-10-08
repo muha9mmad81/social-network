@@ -102,4 +102,27 @@ class PostController extends Controller
     {
         return $this->favourite->getMyFavouritePosts($request);
     }
+
+
+    //
+
+    public function getUserPosts(Request $request, $userId)
+    {
+        return $this->post->getAllUserPosts($request, $userId);
+    }
+
+    public function getUserMediaWithoutAuthentication(Request $request, $userId)
+    {
+        return $this->post->getUserMediaWithoutAuthentication($request, $userId);
+    }
+
+    public function getUserFavouritePosts(Request $request, $userId)
+    {
+        return $this->favourite->getUserFavouritePosts($request, $userId);
+    }
+
+    public function getAllUserGroupPosts(Request $request, $userId)
+    {
+        return $this->post->getAllUserGroupPosts($request, $userId);
+    }
 }

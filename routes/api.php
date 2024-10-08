@@ -37,6 +37,13 @@ Route::get('/get-user-detail/{userId}', [UserController::class, 'getUserDetail']
 Route::get('/get-group-posts', [PostController::class, 'getAllGroupPosts'])->name('get-group-posts');
 Route::get('/get-posts-according-to-group', [PostController::class, 'getPostAccordingToGroup'])->name('get-posts-according-to-group');
 
+Route::get('/get-user-posts/{userId}', [PostController::class, 'getUserPosts'])->name('get-user-posts');
+Route::get('/user-media/{userId}', [PostController::class, 'getUserMediaWithoutAuthentication'])->name('get-user-media-by-userid');
+Route::get('/get-user-favourite-posts/{userId}', [PostController::class, 'getUserFavouritePosts'])->name('get-user-favourite-posts');
+Route::get('/get-user-group-posts/{userId}', [PostController::class, 'getAllUserGroupPosts'])->name('get-user-group-posts');
+Route::get('/get-user-friends/{userId}', [UserController::class, 'getUserFriendsList'])->name('get-user-friends');
+Route::get('/get-user-groups/{userId}', [GroupController::class, 'getUserGroups'])->name('get-user-groups');
+
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout-user', [AuthController::class, 'logoutUser'])->name('logout-user');
 
