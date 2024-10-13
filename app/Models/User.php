@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Http\Resources\FriendRequestResource;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
 use App\Notifications\ForgotPasswordNotification;
 use App\Notifications\NewUserRegistration;
@@ -393,6 +394,22 @@ class User extends Authenticatable
             $user->update();
 
             return response()->json(['status' => 200, 'message' => 'Blue key updated successfully.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
+    public function getMyFriendsPosts(Request $request, $userId)
+    {
+        try {
+            $user = $this->getUserById($userId);
+            $myFriends = $user->friends;
+            $friendsPosts = collect();
+            foreach ($myFriends as $friend) {
+                $friendPosts = $friend->post;
+                $friendsPosts = $friendsPosts->merge($friendPosts);
+            }
+            return response()->json(['status' => 200, 'data' => PostResource::collection($friendsPosts)], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }

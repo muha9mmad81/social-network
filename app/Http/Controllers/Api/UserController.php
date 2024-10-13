@@ -96,4 +96,9 @@ class UserController extends Controller
     {
         return $this->friend->getUserFriendsList($request, $userId);
     }
+
+    public function getMyFriendsPosts(Request $request, $userId)
+    {
+        return $this->user->getMyFriendsPosts($request, $userId);
+    }
 }

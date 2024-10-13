@@ -42,6 +42,7 @@ Route::get('/user-media/{userId}', [PostController::class, 'getUserMediaWithoutA
 Route::get('/get-user-favourite-posts/{userId}', [PostController::class, 'getUserFavouritePosts'])->name('get-user-favourite-posts');
 Route::get('/get-user-group-posts/{userId}', [PostController::class, 'getAllUserGroupPosts'])->name('get-user-group-posts');
 Route::get('/get-user-friends/{userId}', [UserController::class, 'getUserFriendsList'])->name('get-user-friends');
+Route::get('/get-my-friends-posts/{userId}', [UserController::class, 'getMyFriendsPosts'])->name('get-my-friends-posts');
 Route::get('/get-user-groups/{userId}', [GroupController::class, 'getUserGroups'])->name('get-user-groups');
 
 Route::middleware(['auth:api'])->group(function () {
