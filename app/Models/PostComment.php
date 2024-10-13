@@ -11,7 +11,7 @@ class PostComment extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'post_id', 'user_id', 'comment', 'parent'];
+    protected $fillable = ['id', 'post_id', 'user_id', 'comment', 'parent', 'mention_email', 'mention'];
 
     public function user()
     {
@@ -41,6 +41,16 @@ class PostComment extends Model
             $this->user_id = $user->id;
             $this->comment = $request->comment;
             $this->parent = $request->comment_id ?? 0;
+
+            if($request->mention_email){
+                $user = User::where('email', $request->mention_email)->first();
+                if($user){
+                    $this->mention_email = $request->mention_email;
+                    $this->mention = 1;
+                }else{
+                    return response()->json(['status' => 500, 'message' => 'Email not found.'], 500);
+                }
+            }
             $this->save();
 
             return response()->json(['status' => 200, 'message' => 'Comment has been added to the post.', 'data' => new PostCommentResource($this)], 200);
@@ -54,6 +64,16 @@ class PostComment extends Model
         try {
             $comment = $this->find($commentId);
             $comment->comment = $request->comment;
+
+            if($request->mention_email){
+                $user = User::where('email', $request->mention_email)->first();
+                if($user){
+                    $comment->mention_email = $request->mention_email;
+                    $comment->mention = 1;
+                }else{
+                    return response()->json(['status' => 500, 'message' => 'Email not found.'], 500);
+                }
+            }
             $comment->update();
 
             return response()->json(['status' => 200, 'message' => 'Comment has been updated', 'data' => new PostCommentResource($comment)], 200);

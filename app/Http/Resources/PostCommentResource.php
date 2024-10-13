@@ -18,6 +18,8 @@ class PostCommentResource extends JsonResource
         return [
             'id'  => $this->id,
             'comment' => $this->comment,
+            'mention_email' => $this->mention_email ?? null,
+            'mention' => $this->mention == 1 ? true : false,
             'likes_count'           => $this->likes()->count(), 
             'dislikes_count'        => $this->dislikes()->count(),
             'user' => $this->user ? new UserResource($this->user) : null,

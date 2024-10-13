@@ -125,4 +125,9 @@ class PostController extends Controller
     {
         return $this->post->getAllUserGroupPosts($request, $userId);
     }
+
+    public function getMyMentionedPosts(Request $request, $userId)
+    {
+        return $this->post->getMyMentionedPosts($request, $userId);
+    }
 }

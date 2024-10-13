@@ -272,4 +272,20 @@ class Post extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 500], 500);
         }
     }
+
+
+    public function getMyMentionedPosts(Request $request, $userId)
+    {
+        try {
+            $user = User::find($userId);
+            $posts = $this->whereHas('comments', function ($query) use ($user) {
+                $query->where('mention_email', $user->email);
+            })->get();
+            $collection = PostResource::collection($posts);
+
+            return response()->json(['status' => 200, 'data' => $collection], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
 }
