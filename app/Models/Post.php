@@ -77,13 +77,16 @@ class Post extends Model
             $user = auth()->user();
             $originalPost = Post::findOrFail($postId);
 
-            $this->user_id = $user->id; 
+            $this->user_id = $user->id;
             $this->title = $originalPost->title;
             $this->description = $originalPost->description;
             $this->type = $originalPost->type;
             $this->shared_post_id = $originalPost->id;
             $this->is_shared = 1;
             $this->save();
+
+            $this->duplicatePostImages($originalPost, $this);
+            $this->duplicatePostVideos($originalPost, $this);
 
             return response()->json(['status' => 200, 'message' => 'Post has been shared', 'data' => new PostResource($this)], 200);
         } catch (\Exception $e) {
@@ -106,6 +109,17 @@ class Post extends Model
         }
     }
 
+    public function duplicatePostImages($originalPost, $sharedPost)
+    {
+        foreach ($originalPost->images as $image) {
+            PostImage::create([
+                'post_id' => $sharedPost->id,
+                'image' => $image->image // Use the same image path
+            ]);
+        }
+    }
+
+
     public function addPostVideos($request, $post)
     {
         if ($request->video) {
@@ -119,6 +133,17 @@ class Post extends Model
             }
         }
     }
+
+    public function duplicatePostVideos($originalPost, $sharedPost)
+    {
+        foreach ($originalPost->videos as $video) {
+            PostVideo::create([
+                'post_id' => $sharedPost->id,
+                'video' => $video->video // Use the same video path
+            ]);
+        }
+    }
+
 
     public function deletePost(Request $request, $postId)
     {
