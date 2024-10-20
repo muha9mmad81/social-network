@@ -25,8 +25,10 @@ class PostResource extends JsonResource
             'images'                => $this->images ? PostImageResource::collection($this->images) : null,
             'videos'                => $this->videos ? PostVideoResource::collection($this->videos) : null,
             'comments'              => $this->comments ? PostCommentResource::collection($this->comments) : null,
-            'likes_count'           => $this->likes()->count(), 
+            'likes_count'           => $this->likes()->count(),
             'dislikes_count'        => $this->dislikes()->count(),
+            'is_shared'             => $this->is_shared == 1 ? true : false,
+            'original_post'         => $this->originalPost ? new UserResource($this->originalPost->user) : null,
             'created_at'            => $this->created_at ? Carbon::parse($this->created_at)->diffForHumans() : null,
         ];
     }

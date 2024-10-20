@@ -61,6 +61,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/create-remove-post-favourite', [PostController::class, 'createOrRemovePostFavourite'])->name('create-remove-post-favourite');
     Route::get('/get-my-favourite-post', [PostController::class, 'getMyFavouritePosts'])->name('get-my-favourite-post');
     Route::get('/get-my-group-posts', [PostController::class, 'getAllMyGroupPosts'])->name('get-my-group-posts');
+    Route::post('/share-post/{postId}', [PostController::class, 'sharePost'])->name('share-post');
 
     Route::post('/edit-profile', [UserController::class, 'editUserProfile'])->name('edit-profile');
     Route::post('/edit-email-preference', [UserController::class, 'editUserEmailPreference'])->name('edit-email-preference');

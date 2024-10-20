@@ -18,6 +18,11 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function originalPost()
+    {
+        return $this->belongsTo(Post::class, 'shared_post_id');
+    }
+
     public function group()
     {
         return $this->belongsTo(Group::class);
@@ -65,6 +70,27 @@ class Post extends Model
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
         }
     }
+
+    public function sharePost(Request $request, $postId)
+    {
+        try {
+            $user = auth()->user();
+            $originalPost = Post::findOrFail($postId);
+
+            $this->user_id = $user->id; 
+            $this->title = $originalPost->title;
+            $this->description = $originalPost->description;
+            $this->type = $originalPost->type;
+            $this->shared_post_id = $originalPost->id;
+            $this->is_shared = 1;
+            $this->save();
+
+            return response()->json(['status' => 200, 'message' => 'Post has been shared', 'data' => new PostResource($this)], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred: ' . $e->getMessage(), 'status' => 401], 401);
+        }
+    }
+
 
     public function addPostImages($request, $post)
     {
@@ -172,7 +198,7 @@ class Post extends Model
         }
     }
 
-    
+
 
     public function getPostById(Request $request, $postId)
     {
@@ -199,14 +225,14 @@ class Post extends Model
 
             if ($type === 'images' || $type === 'both') {
                 $images = $posts->pluck('images')->flatten()->map(function ($image) {
-                    return asset('images/posts/' . $image->image);  
+                    return asset('images/posts/' . $image->image);
                 });
                 $media['images'] = $images;
             }
 
             if ($type === 'videos' || $type === 'both') {
                 $videos = $posts->pluck('videos')->flatten()->map(function ($video) {
-                    return asset('images/posts/' . $video->video); 
+                    return asset('images/posts/' . $video->video);
                 });
                 $media['videos'] = $videos;
             }
@@ -256,14 +282,14 @@ class Post extends Model
 
             if ($type === 'images' || $type === 'both') {
                 $images = $posts->pluck('images')->flatten()->map(function ($image) {
-                    return asset('images/posts/' . $image->image);  
+                    return asset('images/posts/' . $image->image);
                 });
                 $media['images'] = $images;
             }
 
             if ($type === 'videos' || $type === 'both') {
                 $videos = $posts->pluck('videos')->flatten()->map(function ($video) {
-                    return asset('images/posts/' . $video->video); 
+                    return asset('images/posts/' . $video->video);
                 });
                 $media['videos'] = $videos;
             }

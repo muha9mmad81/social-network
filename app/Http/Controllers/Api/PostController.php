@@ -130,4 +130,9 @@ class PostController extends Controller
     {
         return $this->post->getMyMentionedPosts($request, $userId);
     }
+
+    public function sharePost(Request $request, $postId)
+    {
+        return $this->post->sharePost($request, $postId);
+    }
 }
