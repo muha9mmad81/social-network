@@ -46,6 +46,9 @@ Route::get('/get-user-friends/{userId}', [UserController::class, 'getUserFriends
 Route::get('/get-my-friends-posts/{userId}', [UserController::class, 'getMyFriendsPosts'])->name('get-my-friends-posts');
 Route::get('/get-user-groups/{userId}', [GroupController::class, 'getUserGroups'])->name('get-user-groups');
 
+Route::get('/get-all-jobs', [UserController::class, 'getAllJobs'])->name('get-all-jobs');
+Route::get('/get-single-job/{jobId}', [UserController::class, 'getJobById'])->name('get-single-job');
+
 Route::middleware(['auth:api'])->group(function () {
     Route::post('/logout-user', [AuthController::class, 'logoutUser'])->name('logout-user');
 
@@ -78,6 +81,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/respond-friend-request', [UserController::class, 'respondToFriendRequest'])->name('respond-friend-request');
     Route::get('/get-my-friends', [UserController::class, 'getMyFriendsList'])->name('get-my-friends');
     Route::get('/get-my-friend-requests', [UserController::class, 'showFriendRequests'])->name('get-my-friend-requests');
+    
+    
+    Route::post('/post-job', [UserController::class, 'postJob'])->name('post-job');
+    Route::get('/get-my-jobs', [UserController::class, 'getMyJobs'])->name('get-my-jobs');
+
 
     Route::post('/chat', [ChatController::class, 'message'])->name('chat');
     Route::get('/get-all-conversation', [ChatController::class, 'getAllConversation'])->name('get-all-conversation');

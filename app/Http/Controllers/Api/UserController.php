@@ -8,18 +8,20 @@ use App\Http\Requests\UpdateUserPasswordRequest;
 use App\Models\Friend;
 use App\Models\FriendRequest;
 use App\Models\Invitation;
+use App\Models\Job;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    protected $user, $friendRequest, $friend, $group, $invitation;
-    function __construct(User $user, FriendRequest $friendRequest, Friend $friend, Invitation $invitation)
+    protected $user, $friendRequest, $friend, $group, $invitation, $job;
+    function __construct(User $user, FriendRequest $friendRequest, Friend $friend, Invitation $invitation, Job $job)
     {
         $this->user = $user;
         $this->friendRequest = $friendRequest;
         $this->friend = $friend;
         $this->invitation = $invitation;
+        $this->job = $job;
     }
 
     public function editUserProfile(Request $request)
@@ -100,5 +102,25 @@ class UserController extends Controller
     public function getMyFriendsPosts(Request $request, $userId)
     {
         return $this->user->getMyFriendsPosts($request, $userId);
+    }
+
+    public function postJob(Request $request)
+    {
+        return $this->job->postJob($request);
+    }
+
+    public function getMyJobs(Request $request)
+    {
+        return $this->job->getMyJobs($request);
+    }
+
+    public function getAllJobs(Request $request)
+    {
+        return $this->job->getAllJobs($request);
+    }
+
+    public function getJobById(Request $request, $jobId)
+    {
+        return $this->job->getJobById($request, $jobId);
     }
 }

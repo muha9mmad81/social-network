@@ -71,6 +71,11 @@ class User extends Authenticatable
         return $this->hasMany(FriendRequest::class, 'sender_id');
     }
 
+    public function user_company()
+    {
+        return $this->hasOne(UserCompany::class);
+    }
+
     // Friend Requests Received
     public function friendRequestsReceived()
     {
