@@ -65,6 +65,23 @@ class Post extends Model
             $this->save();
             $this->addPostImages($request, $this);
             $this->addPostVideos($request, $this);
+
+
+            if ($request->mention_email) {
+                $comment = new PostComment();
+                $comment->post_id = $this->id;
+                $comment->user_id = $user->id;
+                $comment->comment = $request->comment ?? '';
+                $comment->parent = $request->comment_id ?? 0;
+                $user = User::where('email', $request->mention_email)->first();
+                if ($user) {
+                    $comment->mention_email = $request->mention_email;
+                    $comment->mention = 1;
+                } else {
+                    return response()->json(['status' => 500, 'message' => 'Email not found.'], 500);
+                }
+                $comment->save();
+            }
             return response()->json(['status' => 200, 'message' => 'Post has been created', 'data' => new PostResource($this)], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occured, ' . $e->getMessage(), 'status' => 401], 401);
